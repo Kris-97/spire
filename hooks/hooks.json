@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f .spire/STATE.md ]; then echo \"SPIRE_PROJECT_DETECTED\"; cat .spire/STATE.md | head -20; else echo \"NO_SPIRE_PROJECT\"; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
