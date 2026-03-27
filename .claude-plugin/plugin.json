@@ -1,7 +1,7 @@
 {
   "name": "spire",
   "version": "1.0.0",
-  "description": "Full-lifecycle project builder: idea to working software with checkpoint-driven autonomy, wave-based parallel execution, and smart delegation to existing skills",
+  "description": "Full-lifecycle project builder: idea to finished deliverable with checkpoint-driven autonomy, wave-based parallel execution, and smart delegation. Builds software, research, analysis, documentation, and anything else end-to-end.",
   "author": {
     "name": "spire-contributors"
   },

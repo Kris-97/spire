@@ -1,5 +1,5 @@
 ---
-description: Build software, analysis pipelines, and apps from idea to working code
+description: Build anything from idea to finished deliverable — software, research, analysis, documentation, workflows
 argument-hint: "[resume|status|abort] or describe what you want to build"
 ---
 
