@@ -124,6 +124,197 @@ Spire delegates to existing Claude Code skills when they handle the job better:
 | Spreadsheets / models | `office-xlsx`, `excel-pipeline` |
 | Commit and PR | `commit-commands:commit-push-pr` |
 
+## What Happens When You Run `/spire`
+
+Here's the full flow you can expect, shown with two examples — a software project and a research project.
+
+---
+
+### Example 1: `/spire build a CLI tool that converts CSV to JSON`
+
+**Phase 0 — Scope** (you answer 2-3 questions)
+```
+Spire: What's the core functionality?
+You:   Read CSV, output JSON. Support stdin and file input.
+
+Spire: Any constraints?
+You:   Python, no external dependencies.
+
+╔══════════════════════════════════════════════╗
+║  SPIRE GATE 1: Scope Confirmation           ║
+╠══════════════════════════════════════════════╣
+║  Project: csv-to-json                       ║
+║  Type: software                             ║
+║  Mode: Solo                                 ║
+║  Requirements: 4 items                      ║
+╚══════════════════════════════════════════════╝
+→ You approve
+```
+
+**Phase 1 — Design** (architect proposes approaches)
+```
+Spire Architect proposes:
+  A) Single-file script — simple, no structure
+  B) CLI with argparse + converter module — clean separation
+  C) Package with setup.py — installable via pip
+
+Recommends B. You pick B.
+
+╔══════════════════════════════════════════════╗
+║  SPIRE GATE 2: Design Approval              ║
+║  Approach: CLI + converter module            ║
+║  Components: 3 (cli.py, converter.py, tests) ║
+╚══════════════════════════════════════════════╝
+→ You approve
+```
+
+**Phase 2 — Plan** (tasks grouped into waves)
+```
+╔══════════════════════════════════════════════╗
+║  SPIRE GATE 3: Build Plan Approval          ║
+║  Tasks: 4 in 2 waves                        ║
+║                                             ║
+║  Wave 1: converter module + CLI parser      ║
+║  Wave 2: integration + tests                ║
+╚══════════════════════════════════════════════╝
+→ You approve
+```
+
+**Phase 3 — Build** (agents work in parallel)
+```
+Wave 1: Two builders launch simultaneously
+  → builder-TASK-001: writes converter.py    ✓ DONE
+  → builder-TASK-002: writes cli.py          ✓ DONE
+  → reviewer checks both                     ✓ APPROVED
+  → integrator verifies imports work         ✓ CLEAN
+
+Wave 2: Tests and integration
+  → builder-TASK-003: writes tests           ✓ DONE
+  → builder-TASK-004: adds error handling    ✓ DONE
+  → reviewer + integrator                    ✓ APPROVED
+```
+
+**Phase 4 — Verify & Ship**
+```
+Verifier runs: pytest → 8/8 passing
+Requirements: 4/4 met
+
+╔══════════════════════════════════════════════╗
+║  SPIRE GATE 4: Delivery                     ║
+║  Requirements: 4/4 met                      ║
+║  Tests: 8/8 passing                         ║
+║  Files: 5 created                           ║
+╚══════════════════════════════════════════════╝
+→ You choose: Commit & PR
+```
+
+---
+
+### Example 2: `/spire write an analysis of Nordic infrastructure fund performance`
+
+**Phase 0 — Scope** (adapted questions for research)
+```
+Spire: What's the research question?
+You:   How have Nordic infra funds performed vs. European benchmarks?
+
+Spire: What data sources are available?
+You:   Preqin data exports, annual reports from EIF and Argentum.
+
+Spire: Who's the audience?
+You:   Internal IC, so professional but not academic.
+
+╔══════════════════════════════════════════════╗
+║  SPIRE GATE 1: Scope Confirmation           ║
+║  Project: Nordic infra performance analysis  ║
+║  Type: research                             ║
+║  Mode: Solo                                 ║
+║  Requirements: 5 items                      ║
+╚══════════════════════════════════════════════╝
+→ You approve
+```
+
+**Phase 1 — Design** (architect proposes thesis structures)
+```
+Spire Architect proposes:
+  A) Benchmark comparison — straight performance vs. index
+  B) Factor decomposition — break returns into vintage, strategy, geography
+  C) Case study approach — deep dive on 3-4 funds
+
+Recommends B. You pick B.
+
+╔══════════════════════════════════════════════╗
+║  SPIRE GATE 2: Design Approval              ║
+║  Approach: Factor decomposition              ║
+║  Sections: 6 (intro, data, methodology,      ║
+║    vintage analysis, strategy analysis,       ║
+║    conclusions)                               ║
+╚══════════════════════════════════════════════╝
+→ You approve
+```
+
+**Phase 2 — Plan** (research tasks in waves)
+```
+╔══════════════════════════════════════════════╗
+║  SPIRE GATE 3: Build Plan Approval          ║
+║  Tasks: 7 in 3 waves                        ║
+║                                             ║
+║  Wave 1: Data processing + lit review       ║
+║  Wave 2: Vintage analysis + strategy analysis║
+║  Wave 3: Synthesis + conclusions + intro     ║
+╚══════════════════════════════════════════════╝
+→ You approve
+```
+
+**Phase 3 — Build** (research tasks execute)
+```
+Wave 1: Foundation work (parallel)
+  → builder-TASK-001: processes Preqin data   ✓ DONE
+  → builder-TASK-002: writes lit review       ✓ DONE
+  → builder-TASK-003: creates methodology     ✓ DONE
+  → reviewer: checks data handling, sources   ✓ APPROVED
+
+Wave 2: Analysis sections (parallel, depend on Wave 1 data)
+  → builder-TASK-004: vintage year analysis   ✓ DONE
+  → builder-TASK-005: strategy breakdown      ✓ DONE
+  → reviewer: checks argument soundness       ✓ ISSUES_FOUND
+  → fix agent: adds missing benchmark data    ✓ DONE (round 1)
+  → integrator: checks cross-references       ✓ RESOLVED
+
+Wave 3: Synthesis (depends on Waves 1-2)
+  → builder-TASK-006: conclusions             ✓ DONE
+  → builder-TASK-007: introduction + exec sum ✓ DONE
+  → integrator: checks narrative coherence    ✓ CLEAN
+```
+
+**Phase 4 — Verify & Ship**
+```
+Verifier checks:
+  - All 5 requirements addressed              ✓
+  - Data citations accurate                   ✓
+  - Methodology applied consistently          ✓
+  - No unsupported claims                     ✓
+  - Sections complete (no stubs)              ✓
+
+╔══════════════════════════════════════════════╗
+║  SPIRE GATE 4: Delivery                     ║
+║  Requirements: 5/5 met                      ║
+║  Quality: all checks passed                 ║
+║  Deliverables: 8 files created              ║
+╚══════════════════════════════════════════════╝
+→ You choose: Done
+```
+
+---
+
+### Key Things to Know
+
+- **You're always in control.** Nothing advances without your approval at each gate.
+- **You can go back.** Every gate offers "Back to previous phase" if something isn't right.
+- **You can pause anytime.** State is saved to `.spire/`. Come back later with `/spire resume`.
+- **Agents work in parallel.** Independent tasks in each wave run simultaneously — you don't wait for sequential execution.
+- **Issues get fixed automatically.** If a reviewer finds problems, fix agents are dispatched (max 2 rounds) before escalating to you.
+- **It adapts to what you're building.** The same pipeline works whether you're writing code, research, documents, or workflows.
+
 ## Requirements
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI or desktop app
