@@ -2,7 +2,41 @@
 
 Full-lifecycle project builder plugin for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Takes an idea and builds it into a finished deliverable — software, research, analysis, documentation, workflows, or anything else — through checkpoint-driven autonomy, wave-based parallel execution, and smart delegation to existing skills.
 
-Inspired by [karpathy/autoresearch](https://github.com/karpathy/autoresearch), [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done), and Claude Code's TeamCreate system.
+## Why Spire Exists
+
+AI coding assistants are powerful, but they have a fundamental problem: they degrade. The longer a conversation runs, the more context accumulates, the more the model forgets its original instructions, and the worse the output gets. This is **context rot** — and it's why ambitious projects built in a single Claude session tend to start strong and end sloppy.
+
+Three projects attacked this problem from different angles, and Spire takes the best ideas from each:
+
+**[Andrej Karpathy's autoresearch](https://github.com/karpathy/autoresearch)** showed that AI agents can run autonomous optimization loops overnight — modify code, evaluate, keep what works, discard what doesn't. The human's job shifts from writing code to writing *strategy*. The insight: **stop micromanaging agents and start directing them with clear objectives and evaluation criteria.**
+
+**[Get Shit Done (GSD)](https://github.com/gsd-build/get-shit-done)** solved context rot head-on by giving each agent a fresh 200K-token context window with only the information it needs. No accumulated conversation history, no degradation. It also introduced **wave-based parallel execution** — grouping tasks by dependency level so independent work runs simultaneously while dependent work waits. And it proved that project state belongs in human-readable files on disk, not trapped in a conversation that will eventually be forgotten.
+
+**Claude Code's TeamCreate system** added something neither of the above had: **inter-agent communication**. Agents in a team can message each other, coordinate on shared interfaces, and work on the same project without stepping on each other's toes.
+
+### What's actually new here
+
+Spire isn't just a remix. The combination creates capabilities none of the sources have individually:
+
+- **Domain-agnostic building.** Autoresearch optimizes ML models. GSD builds software. Spire builds *anything* — the same pipeline adapts to code, research, analysis, documents, or workflows. The project type is detected at the start and every agent adjusts its behavior accordingly.
+
+- **Checkpoint-driven autonomy.** Autoresearch runs fully autonomous (no human approval loops). GSD has checkpoints but they're software-focused. Spire's four gates are a deliberate design choice: the human stays in the loop at every phase boundary, but the agents run free within each phase. This is the practical middle ground between "let the AI do everything" and "approve every line."
+
+- **Smart delegation to existing skills.** Neither autoresearch nor GSD knew about the user's existing toolchain. Spire checks a delegation table before each step — if an existing skill (brainstorming, writing-plans, frontend-design, office-docx) handles the task better, Spire delegates instead of reinventing. This means Spire gets better as your skill library grows, without Spire itself needing to change.
+
+### Honest limitations
+
+Spire is an orchestration layer, not magic. Some things to be realistic about:
+
+- **Quality depends on the underlying model.** Spire can structure the work perfectly, but if the builder agent writes bad code or weak analysis, the reviewer can only catch so much. Wave-based execution with fresh context *helps* — it reduces the context rot problem that causes late-session quality drops — but it doesn't eliminate the model's inherent limitations.
+
+- **Checkpoint gates add friction.** Four approval gates mean four interruptions. For a quick script, that's overkill. Spire is designed for projects substantial enough to benefit from the structure — if you can describe the whole thing in one sentence and build it in five minutes, you probably don't need Spire.
+
+- **The .spire/ artifact system is only as good as what's written to it.** If Phase 0 captures the wrong requirements, every downstream phase builds on a flawed foundation. The gates are designed to catch this (you review PROJECT.md before proceeding), but they require you to actually read the artifacts, not just click approve.
+
+- **Parallel execution has coordination costs.** Running 4 builders simultaneously is faster than running them sequentially, but the integration step afterwards can surface conflicts. The spire-integrator handles most of these automatically, but complex cross-cutting concerns may require your input.
+
+The thesis behind Spire is simple: **the hard part of building things isn't writing — it's organizing the work so that writing happens in the right order, with the right context, and gets verified against the right criteria.** That's what Spire does.
 
 ## How It Works
 
